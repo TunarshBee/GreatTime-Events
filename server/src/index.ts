@@ -5,6 +5,9 @@ import dotenv from 'dotenv';
 import hallRoutes from './routes/halls';
 import bookingRoutes from './routes/bookings';
 import authRoutes from './routes/auth';
+import paymentsRoutes from './routes/payments';
+import settingsRoutes from './routes/settings';
+import dashboardRoutes from './routes/dashboard';
 
 dotenv.config();
 
@@ -21,6 +24,9 @@ app.get('/', (req, res) => {
 app.use('/api/halls', hallRoutes);
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/payments', paymentsRoutes);
+app.use('/api/settings', settingsRoutes);
+app.use('/api/dashboard', dashboardRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
