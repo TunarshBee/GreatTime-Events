@@ -1,0 +1,52 @@
+// prisma/schema.prisma - SQLite Compatible
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Admin {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Hall {
+  id        String    @id @default(cuid())
+  name      String
+  capacity  Int
+  price     Float     // Changed from Decimal to Float for SQLite
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  bookings  Booking[]
+}
+
+model Booking {
+  id            String   @id @default(cuid())
+  customer      String
+  phone         String
+  email         String?
+  hallId        String
+  hall          Hall     @relation(fields: [hallId], references: [id], onDelete: Cascade)
+  date          DateTime
+  status        String   @default("PENDING") // Changed from enum to String
+  amount        Float?   // Changed from Decimal to Float
+  paymentStatus String   @default("PENDING") // Changed from enum to String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([hallId])
+  @@index([date])
+  @@index([status])
+}
+
+// Note: SQLite doesn't support enums, so we use String instead
+// Valid status values: "PENDING", "APPROVED", "CANCELLED", "COMPLETED"
+// Valid paymentStatus values: "PENDING", "PAID", "FAILED", "REFUNDED"
